@@ -1,0 +1,12 @@
+#!/usr/bin/sh
+# From https://docu.blackdot.be/snipets/solaris/smartos-ipv6
+
+. /lib/svc/share/smf_include.sh
+ 
+## enable ipv6
+svcadm enable ndp
+ipadm create-addr -t -T addrconf {{ smartos_gz_ipv6_setup_nic }}/v6a
+ipadm create-addr -t -T static -a {{ smartos_gz_ipv6_setup_ip }} {{ smartos_gz_ipv6_setup_nic }}/v6s
+route add -inet6 default fe80::1
+ 
+exit $SMF_EXIT_OK

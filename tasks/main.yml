@@ -1,0 +1,29 @@
+---
+- name: Create /opt/custom/scripts directory
+  file: path=/opt/custom/scripts state=directory
+
+- name: Create /opt/custom/smf directory
+  file: path=/opt/custom/smf state=directory
+
+- name: Copy IPv6 script
+  template:
+    src: ipv6-setup.j2
+    dest: /opt/custom/scripts/ipv6-setup
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy SMF manifest
+  template:
+    src: ipv6-setup.xml.j2
+    dest: /opt/custom/smf/ipv6-setup.xml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Import SMF manifest
+  raw: 'svccfg import /opt/custom/smf/ipv6-setup.xml'
+
+- name: Enable IPv6
+  service: name=ipv6-setup state=restarted
+
